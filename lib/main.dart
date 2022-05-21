@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
-import './category_meals_screen.dart';
-import './categories_screen.dart';
+import './screens/meal_details_screen.dart';
+import './screens/bottom_nav_bar.dart';
+import './screens/category_meals_screen.dart';
+import './screens/categories_screen.dart';
 
 void main() => runApp(MyApp());
 
@@ -32,15 +34,16 @@ class MyApp extends StatelessWidget {
           error: Colors.black,
           onError: Colors.white,
           surface: Colors.white,
-          onSurface: Colors.black,
+          onSurface: Colors.black54,
           brightness: Brightness.light,
         ),
       ),
-      home: CategoriesScreen(),
-      initialRoute: CategoriesScreen.routeName,
+      initialRoute: '/',
       routes: {
+        '/': (context) => BottomNavBar(),
         CategoriesMeals.routeName: (context) => CategoriesMeals(),
         CategoriesScreen.routeName: (context) => CategoriesScreen(),
+        MealDetailsScreen.routeName: (context) => MealDetailsScreen(),
       },
     );
   }

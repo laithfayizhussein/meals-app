@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import './dummy_data.dart';
+import 'package:section7/widgets/meal_item.dart';
+import '../dummy_data.dart';
 
 class CategoriesMeals extends StatelessWidget {
   static const String routeName = 'CategoriesMeals';
@@ -27,7 +28,14 @@ class CategoriesMeals extends StatelessWidget {
             itemCount: categoriesMeals
                 .length, // should added to view more than one item
             itemBuilder: (context, index) {
-              return Text(categoriesMeals[index].title);
+              return MealItem(
+                title: categoriesMeals[index].title,
+                duration: categoriesMeals[index].duration,
+                complexity: categoriesMeals[index].complexity,
+                imageUrl: categoriesMeals[index].imageUrl,
+                affordability: categoriesMeals[index].affordability,
+                id: categoriesMeals[index].id,
+              );
             }));
   }
 }
