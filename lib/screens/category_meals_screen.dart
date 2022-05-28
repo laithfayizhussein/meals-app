@@ -1,40 +1,65 @@
 import 'package:flutter/material.dart';
-import 'package:section7/widgets/meal_item.dart';
-import '../dummy_data.dart';
+import '../widgets/meal_item.dart';
+import '../models/meal.dart';
 
-class CategoriesMeals extends StatelessWidget {
+class CategoriesMeals extends StatefulWidget {
   static const String routeName = 'CategoriesMeals';
+  final List<Meal> availableMeals;
+  CategoriesMeals(this.availableMeals);
+
+  @override
+  State<CategoriesMeals> createState() => _CategoriesMealsState();
+}
+
+class _CategoriesMealsState extends State<CategoriesMeals> {
+  late String? categoryTitle;
+  late List<Meal> displayedMeals;
+  var _loadedInitData = false;
+
+  @override
+  void didChangeDependencies() {
+    if (!_loadedInitData) {
+      final routeArge =
+          ModalRoute.of(context)?.settings.arguments as Map<String, String>;
+      categoryTitle = routeArge['title'];
+      final categotyId = routeArge['id'];
+      displayedMeals = widget
+          .availableMeals // change it from dummy list to available from the main to con  trol the filtering
+          .where((element) => element.categories.contains(categotyId))
+          .toList();
+      _loadedInitData = true;
+    }
+
+    super.didChangeDependencies();
+  }
+
+  void _removeFunction(String mealId) {
+    setState(() {
+      displayedMeals.removeWhere((element) => element.id == mealId);
+    });
+  }
 
   // passing data by the material push nav
-  // final String categoryTitle;
-  // final String categoryId;
-  // CategoriesMeals({required this.categoryTitle, required this.categoryId});
-
   @override
   Widget build(BuildContext context) {
     // pass the data in push named way and i use map to loop throw the string i have
-    final routeArge =
-        ModalRoute.of(context)?.settings.arguments as Map<String, String>;
-    final categoryTitle = routeArge['title'];
-    final categotyId = routeArge['id'];
-    final categoriesMeals = DUMMY_MEALS
-        .where((element) => element.categories.contains(categotyId))
-        .toList();
+
     return Scaffold(
         appBar: AppBar(
           title: Text(categoryTitle!),
         ),
         body: ListView.builder(
-            itemCount: categoriesMeals
+            itemCount: displayedMeals
                 .length, // should added to view more than one item
             itemBuilder: (context, index) {
               return MealItem(
-                title: categoriesMeals[index].title,
-                duration: categoriesMeals[index].duration,
-                complexity: categoriesMeals[index].complexity,
-                imageUrl: categoriesMeals[index].imageUrl,
-                affordability: categoriesMeals[index].affordability,
-                id: categoriesMeals[index].id,
+                title: displayedMeals[index].title,
+                duration: displayedMeals[index].duration,
+                complexity: displayedMeals[index].complexity,
+                imageUrl: displayedMeals[index].imageUrl,
+                affordability: displayedMeals[index].affordability,
+                id: displayedMeals[index].id,
+                removeItem: _removeFunction,
               );
             }));
   }

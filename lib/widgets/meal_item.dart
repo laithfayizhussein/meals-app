@@ -10,13 +10,15 @@ class MealItem extends StatelessWidget {
   final int duration;
   final Complexity complexity;
   final Affordability affordability;
+  final Function removeItem;
   MealItem(
       {required this.title,
       required this.duration,
       required this.complexity,
       required this.imageUrl,
       required this.affordability,
-      required this.id});
+      required this.id,
+      required this.removeItem});
 
   String get complexityText {
     switch (complexity) {
@@ -45,7 +47,14 @@ class MealItem extends StatelessWidget {
   }
 
   void selectMeal(BuildContext context) {
-    Navigator.pushNamed(context, MealDetailsScreen.routeName, arguments: id);
+    Navigator.pushNamed(context, MealDetailsScreen.routeName, arguments: id)
+        .then((value) {
+      if (value != null) {
+        print(value);
+        // thats mean the the pop working by the button not in the back arrow on android
+        removeItem(value);
+      }
+    });
   }
 
   @override
